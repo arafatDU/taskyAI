@@ -8,6 +8,7 @@ const Logo = () => {
         alt="Tasky AI" 
         className="w-6 h-6"
       />
+      Tasky AI
     </div>
   )
 }
