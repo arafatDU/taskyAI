@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import AuthSyncPage from "@/pages/AuthSyncPage";
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
@@ -19,6 +20,10 @@ const rootRouteChildren: RouteObject[] = [
   {
     path: 'login',
     element: <LoginPage />,
+  },
+  {
+    path: 'auth-sync',
+    element: <AuthSyncPage />,
   },
 
 ];
