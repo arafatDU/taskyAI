@@ -1,5 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
+import AuthSyncPage from "@/pages/AuthSyncPage";
 import HomePage from "@/pages/HomePage";
+import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import RootErrorBoundary from "@/pages/RootErrorBoundary";
 import { createBrowserRouter } from "react-router";
@@ -14,6 +16,14 @@ const rootRouteChildren: RouteObject[] = [
   {
     path: "register",
     element: <RegisterPage />,
+  },
+  {
+    path: 'login',
+    element: <LoginPage />,
+  },
+  {
+    path: 'auth-sync',
+    element: <AuthSyncPage />,
   },
 
 ];
