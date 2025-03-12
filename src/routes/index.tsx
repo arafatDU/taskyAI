@@ -1,6 +1,8 @@
+import AppLayout from "@/layouts/AppLayout";
 import RootLayout from "@/layouts/RootLayout";
 import AuthSyncPage from "@/pages/AuthSyncPage";
 import HomePage from "@/pages/HomePage";
+import InboxPage from "@/pages/InboxPage";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import RootErrorBoundary from "@/pages/RootErrorBoundary";
@@ -28,12 +30,24 @@ const rootRouteChildren: RouteObject[] = [
 
 ];
 
+const appRouteChildren: RouteObject[] = [
+  {
+    path: 'inbox',
+    element: <InboxPage />,
+  }
+];
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     errorElement: <RootErrorBoundary />,
     children: rootRouteChildren,
+  },
+  {
+    path: "/app",
+    element: <AppLayout />,
+    children: appRouteChildren,
   }
 ])
 
