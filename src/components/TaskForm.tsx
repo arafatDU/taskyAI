@@ -16,9 +16,47 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { CalendarIcon, Inbox, X, ChevronDown, Hash, SendHorizonal } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+
+import type { ClassValue } from 'clsx'
+import type { TaskForm } from '@/types'
 
 
-const TaskForm = () => {
+type TaskFormProps = {
+  defaultFormData?: TaskForm;
+  className?: ClassValue;
+  mode: 'create' | 'edit';
+  onCancel?: () => void;
+  onSubmit?: (formData: TaskForm) => void;
+}
+
+const DEFAULT_FORM_DATA: TaskForm = {
+  content: '',
+  due_date: null,
+  project: null
+}
+
+const TaskForm: React.FC<TaskFormProps> = ({
+  defaultFormData = DEFAULT_FORM_DATA,
+  className,
+  mode,
+  onCancel,
+  onSubmit
+}) => {
+
+  const [taskContent, setTaskContent] = useState(defaultFormData.content);
+  const [dueDate, setDueDate] = useState(defaultFormData.due_date);
+  const [projectId, setProjectId] = useState(defaultFormData.project); // projectId to project
+  const [projectName, setProjectName] = useState('');
+  const [projectColorHex, setProjectColorHex] = useState('');
+
+  const [dueDateOpen, setDueDateOpen] = useState(false);
+  const [projectOpen, setProjectOpen] = useState(false);
+
+  const [formData, setFormData] = useState(defaultFormData);
+
+  console.log(taskContent);
+
   return (
     <Card className='focus:focus-within:border-foreground/30'>
       <CardContent className='p-2'>
@@ -26,16 +64,23 @@ const TaskForm = () => {
           className='!border-0 !ring-0 mb-2 p-1'
           placeholder='After finishing the project, Take a Tour'
           autoFocus
+          value={taskContent}
+          onInput={(e) => setTaskContent(e.currentTarget.value)}
         />
         <div className="ring-1 ring-border rounded-md max-w-max">
-          <Popover>
+          <Popover
+            open={dueDateOpen}
+            onOpenChange={setDueDateOpen}
+          >
             <PopoverTrigger asChild>
               <Button 
                 type='button'
                 variant='ghost'
                 size='sm'
               >
-                <CalendarIcon /> Due Date
+                <CalendarIcon /> 
+
+                {dueDate ? new Date(dueDate).toDateString() : 'Due Date' }
               </Button>
             </PopoverTrigger>
 
@@ -44,6 +89,10 @@ const TaskForm = () => {
                 mode='single'
                 disabled={{ before: new Date() }}
                 initialFocus
+                onSelect={(selected) => {
+                  setDueDate(selected || null);
+                  setDueDateOpen(false);
+                }}
               />
             </PopoverContent>
           </Popover>
