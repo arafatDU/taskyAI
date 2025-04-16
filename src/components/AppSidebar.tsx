@@ -21,6 +21,8 @@ import { SIDEBAR_LINKS } from "@/constants"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
+import TaskFormDialog from "@/components/TaskFormDialog"
+
 const AppSidebar = () => {
   return (
     <Sidebar>
@@ -38,9 +40,11 @@ const AppSidebar = () => {
             <SidebarMenu>
               {/* Task create button */}
               <SidebarMenuItem>
-                <SidebarMenuButton className="!text-primary hover:bg-primary/10">
-                  <CirclePlus /> Add Task
-                </SidebarMenuButton>
+                <TaskFormDialog>
+                  <SidebarMenuButton className="!text-primary hover:bg-primary/10">
+                    <CirclePlus /> Add Task
+                  </SidebarMenuButton>
+                </TaskFormDialog>
               </SidebarMenuItem>
 
               {/* Sidebar links */}
