@@ -17,6 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { CalendarIcon, Inbox, X, ChevronDown, Hash, SendHorizonal } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
+import * as chrono from 'chrono-node'
 
 import { formatCustomDate, getTaskDueDateColorClass, cn } from '@/lib/utils'
 
@@ -66,6 +67,17 @@ const TaskForm: React.FC<TaskFormProps> = ({
       project: projectId
     }));
   }, [taskContent, dueDate, projectId]);
+
+  useEffect(() => {
+    const chronoParsed = chrono.parse(taskContent);
+    
+    if (chronoParsed.length) {
+      const lastDate = chronoParsed[chronoParsed.length - 1];
+
+      setDueDate(lastDate.date());
+    }
+
+  }, [taskContent]);
 
 
   const handleSubmit = useCallback(() => {
@@ -147,7 +159,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
             <Button
               variant='ghost'
               role='combobox'
-              aria-expanded={false}
+              aria-expanded={projectOpen}
               className='max-w-max'
             >
               <Inbox /> Inbox <ChevronDown />
