@@ -50,7 +50,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
 
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
-  const [projectId, setProjectId] = useState(defaultFormData.project); // projectId to project
+  const [project, setProject] = useState(defaultFormData.project); // projectId to project
   const [projectName, setProjectName] = useState('');
   const [projectColorHex, setProjectColorHex] = useState('');
 
@@ -64,9 +64,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
       ...prevFormData,
       content: taskContent,
       due_date: dueDate,
-      project: projectId
+      project: project
     }));
-  }, [taskContent, dueDate, projectId]);
+  }, [taskContent, dueDate, project]);
 
   useEffect(() => {
     const chronoParsed = chrono.parse(taskContent);
