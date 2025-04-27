@@ -50,7 +50,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
 
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
-  const [projectId, setProjectId] = useState(defaultFormData.project); // projectId to project
+  const [project, setProject] = useState(defaultFormData.project); // projectId to project
   const [projectName, setProjectName] = useState('');
   const [projectColorHex, setProjectColorHex] = useState('');
 
@@ -64,9 +64,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
       ...prevFormData,
       content: taskContent,
       due_date: dueDate,
-      project: projectId
+      project: project
     }));
-  }, [taskContent, dueDate, projectId]);
+  }, [taskContent, dueDate, project]);
 
   useEffect(() => {
     const chronoParsed = chrono.parse(taskContent);
@@ -89,7 +89,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   }, [taskContent, formData, onSubmit]);
 
   return (
-    <Card className='focus:focus-within:border-foreground/30'>
+    <Card className={cn('focus:focus-within:border-foreground/30', className)}>
       <CardContent className='p-2'>
         <Textarea 
           className='!border-0 !ring-0 mb-2 p-1'
@@ -97,6 +97,13 @@ const TaskForm: React.FC<TaskFormProps> = ({
           autoFocus
           value={taskContent}
           onInput={(e) => setTaskContent(e.currentTarget.value)}
+          onKeyDown={(e) => {
+            if(e.key === 'Enter') {
+              e.preventDefault();
+              
+              handleSubmit();
+            }
+          }}
         />
         <div className="ring-1 ring-border rounded-md max-w-max">
           <Popover
