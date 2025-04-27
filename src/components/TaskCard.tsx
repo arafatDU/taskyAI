@@ -9,6 +9,8 @@ import { formatCustomDate, getTaskDueDateColorClass } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import TaskForm from "@/components/TaskForm";
 import { Task } from "@/types";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 
 type TaskCardProps = {
@@ -30,6 +32,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
   const [taskFormShow, setTaskFormShow] = useState(false);
   const fetcher = useFetcher();
+  const { toast } = useToast();
   const fetcherTask = fetcher.json as Task;
   const task: Task = Object.assign({
       id,
@@ -66,6 +69,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
             aria-describedby="task-content"
             onClick={async () => {
               await handleTaskComplete(!task.completed);
+
+              toast({
+                title: '1 task completed',
+                action: (
+                  <ToastAction
+                    altText="Undo"
+                    onClick={handleTaskComplete.bind(null, false)}
+                  >
+                    Undo
+                  </ToastAction>
+                )
+              })
             }}
           >
             <Check
