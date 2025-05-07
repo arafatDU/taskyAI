@@ -8,6 +8,7 @@ import TaskForm from "@/components/TaskForm"
 import TopAppBar from "@/components/TopAppBar"
 import { Models } from "appwrite"
 import TaskCard from "@/components/TaskCard"
+import TaskCardSkeleton from "@/components/TaskCardSkeleton"
 
 const InboxPage = () => {
   const fetcher = useFetcher();
@@ -41,6 +42,9 @@ const InboxPage = () => {
                 />
             )
           )}
+
+          {fetcher.state !== 'idle' && <TaskCardSkeleton /> }
+
           {!taskFormShow && <TaskCreateButton onClick={() => setTaskFormShow(true)} />}
 
           {!tasks.total && !taskFormShow && <TaskEmptyState type="inbox" />}

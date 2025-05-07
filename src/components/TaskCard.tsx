@@ -111,7 +111,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
               </p>
             </CardContent>
 
-            <CardFooter className="p-0 flex gap-4">
+            <CardFooter className="p-0 flex gap-4 py-2">
               {task.due_date && location.pathname !== '/app/today' && (
                 <div className={cn('flex items-center gap-1 text-xs text-muted-foreground', getTaskDueDateColorClass(task.due_date, task.completed),)}>
                   <CalendarDays size={14} />
