@@ -1,14 +1,27 @@
 import type { Models } from "appwrite"
 import React, { useCallback, useState } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, useLocation } from "react-router";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, truncateString } from "@/lib/utils";
 import { Check, CalendarDays, Hash, Inbox, Edit, Trash2 } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { formatCustomDate, getTaskDueDateColorClass } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import TaskForm from "@/components/TaskForm";
 import { Task } from "@/types";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
 
 
 type TaskCardProps = {
@@ -29,7 +42,9 @@ const TaskCard: React.FC<TaskCardProps> = ({
 }) => {
 
   const [taskFormShow, setTaskFormShow] = useState(false);
+  const location = useLocation();
   const fetcher = useFetcher();
+  const { toast } = useToast();
   const fetcherTask = fetcher.json as Task;
   const task: Task = Object.assign({
       id,
@@ -66,6 +81,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
             aria-describedby="task-content"
             onClick={async () => {
               await handleTaskComplete(!task.completed);
+
+              toast({
+                title: '1 task completed',
+                action: (
+                  <ToastAction
+                    altText="Undo"
+                    onClick={handleTaskComplete.bind(null, false)}
+                  >
+                    Undo
+                  </ToastAction>
+                )
+              })
             }}
           >
             <Check
@@ -84,8 +111,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
               </p>
             </CardContent>
 
-            <CardFooter className="p-0 flex gap-4">
-              {task.due_date && (
+            <CardFooter className="p-0 flex gap-4 py-2">
+              {task.due_date && location.pathname !== '/app/today' && (
                 <div className={cn('flex items-center gap-1 text-xs text-muted-foreground', getTaskDueDateColorClass(task.due_date, task.completed),)}>
                   <CalendarDays size={14} />
 
@@ -93,11 +120,15 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 </div>
               )}
 
-              <div className="flex items-center gap-1 text-xs text-muted-foreground ms-auto my-2">
-                <div className="truncate text-right">{task.project?.name || 'Inbox'}</div>
+              {location.pathname !== '/app/inbox' && 
+                location.pathname !== `/app/projects/${project?.$id}` && (
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground ms-auto my-2">
+                    <div className="truncate text-right">{task.project?.name || 'Inbox'}</div>
+    
+                    {task.project ? <Hash size={14} /> : <Inbox size={14} className="text-muted-foreground" />}
+                  </div>
+                )}
 
-                {task.project ? <Hash size={14} /> : <Inbox size={14} className="text-muted-foreground" />}
-              </div>
             </CardFooter>
           </Card>
 
@@ -120,20 +151,51 @@ const TaskCard: React.FC<TaskCardProps> = ({
               </Tooltip>
             )}
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  className="w-6 h-6 text-muted-foreground"
-                  aria-label="Delete Task"
-                >
-                  <Trash2 />
-                </Button>
-              </TooltipTrigger>
+            <AlertDialog>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      className="w-6 h-6 text-muted-foreground"
+                      aria-label="Delete Task"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </AlertDialogTrigger>
+                  
+                </TooltipTrigger>
 
-              <TooltipContent>Delete task</TooltipContent>
-            </Tooltip>
+                <TooltipContent>Delete task</TooltipContent>
+              </Tooltip>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete task?</AlertDialogTitle>
+
+                  <AlertDialogDescription>
+                    The <strong>{ truncateString(task.content, 48) }</strong> task will be permanently deleted.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                  <AlertDialogAction
+                    onClick={() => {
+                      fetcher.submit(JSON.stringify({ id: task.id }), {
+                        action: '/app',
+                        method: 'DELETE',
+                        encType: 'application/json',
+                      })
+                    }}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       )}
