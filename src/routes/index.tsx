@@ -16,6 +16,8 @@ import inboxTaskLoader from "@/routes/loaders/inboxLoader";
 import type { RouteObject } from "react-router";
 import TodayTaskPage from "@/pages/TodayTaskPage";
 import todayTaskLoader from "@/routes/loaders/todayTaskLoader";
+import UpcomingTaskPage from "@/pages/UpcomingTaskPage";
+import upcomingTaskLoader from "@/routes/loaders/upcomingTaskLoader";
 
 const rootRouteChildren: RouteObject[] = [
   {
@@ -47,6 +49,11 @@ const appRouteChildren: RouteObject[] = [
     path: 'today',
     element: <TodayTaskPage />,
     loader: todayTaskLoader,
+  },
+  {
+    path: 'upcoming',
+    element: <UpcomingTaskPage />,
+    loader: upcomingTaskLoader,
   }
 ];
 
