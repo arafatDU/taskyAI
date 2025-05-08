@@ -82,17 +82,19 @@ const TaskCard: React.FC<TaskCardProps> = ({
             onClick={async () => {
               await handleTaskComplete(!task.completed);
 
-              toast({
-                title: '1 task completed',
-                action: (
-                  <ToastAction
-                    altText="Undo"
-                    onClick={handleTaskComplete.bind(null, false)}
-                  >
-                    Undo
-                  </ToastAction>
-                )
-              })
+              if(!task.completed) {
+                toast({
+                  title: '1 task completed',
+                  action: (
+                    <ToastAction
+                      altText="Undo"
+                      onClick={handleTaskComplete.bind(null, false)}
+                    >
+                      Undo
+                    </ToastAction>
+                  )
+                })
+              }
             }}
           >
             <Check
@@ -112,7 +114,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
             </CardContent>
 
             <CardFooter className="p-0 flex gap-4 py-2">
-              {task.due_date && location.pathname !== '/app/today' && (
+              {task.due_date && location.pathname !== '/app/today'
+                && location.pathname !== '/app/completed' && (
                 <div className={cn('flex items-center gap-1 text-xs text-muted-foreground', getTaskDueDateColorClass(task.due_date, task.completed),)}>
                   <CalendarDays size={14} />
 
