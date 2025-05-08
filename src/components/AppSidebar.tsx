@@ -13,7 +13,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Logo from "@/components/Logo"
-import { Link } from "react-router"
+import { Link, useLocation } from "react-router"
+import { cn } from "@/lib/utils"
 import { UserButton } from "@clerk/clerk-react"
 import { ChevronRight, CirclePlus, Plus } from "lucide-react"
 
@@ -21,9 +22,15 @@ import { SIDEBAR_LINKS } from "@/constants"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
+import { useSidebar } from "@/components/ui/sidebar"
+
 import TaskFormDialog from "@/components/TaskFormDialog"
 
 const AppSidebar = () => {
+
+  const location = useLocation();
+  const { isMobile, setOpenMobile } = useSidebar();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -41,27 +48,39 @@ const AppSidebar = () => {
               {/* Task create button */}
               <SidebarMenuItem>
                 <TaskFormDialog>
-                  <SidebarMenuButton className="!text-primary hover:bg-primary/10">
+                  <SidebarMenuButton className="!text-primary">
                     <CirclePlus /> Add Task
                   </SidebarMenuButton>
                 </TaskFormDialog>
               </SidebarMenuItem>
 
               {/* Sidebar links */}
-              {
+                {
                 SIDEBAR_LINKS.map((item, index) => (
                   <SidebarMenuItem key={index}>
-                    <SidebarMenuButton asChild className="hover:bg-primary/10">
-                      <Link to={item.href}>
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                  <SidebarMenuButton 
+                    asChild 
+                    className={cn(
+                      "hover:bg-accent-foreground/10",
+                      location.pathname === item.href && "bg-accent-foreground/10",
+                      
+                    )}
+                    onClick={() => {
+                      if (isMobile) {
+                        setOpenMobile(false);
+                      }
+                    }}
+                  >
+                    <Link to={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
 
-                    <SidebarMenuBadge>0</SidebarMenuBadge>
+                  <SidebarMenuBadge>0</SidebarMenuBadge>
                   </SidebarMenuItem>
                 ))
-              }
+                }
             </SidebarMenu>
           </SidebarGroupContent>
         <SidebarGroup />
