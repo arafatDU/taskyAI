@@ -20,6 +20,7 @@ import UpcomingTaskPage from "@/pages/UpcomingTaskPage";
 import upcomingTaskLoader from "@/routes/loaders/upcomingTaskLoader";
 import CompletedTaskPage from "@/pages/CompletedTaskPage";
 import completedTaskLoader from "@/routes/loaders/completedTaskLoader";
+import projectAction from "@/routes/actions/projectAction";
 
 const rootRouteChildren: RouteObject[] = [
   {
@@ -61,6 +62,10 @@ const appRouteChildren: RouteObject[] = [
     path: 'completed',
     element: <CompletedTaskPage />,
     loader: completedTaskLoader,
+  },
+  {
+    path: 'projects',
+    action: projectAction
   }
 ];
 
